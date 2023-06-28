@@ -148,7 +148,6 @@ class RevisedkeyDataset(Dataset):
             self.args.sample_num = self.topk
 
         self.vocab_size = len(self.vocab)
-        self.compute_distance()
         self.construct_data()
 
 
@@ -258,7 +257,6 @@ class RevisedkeyDataset(Dataset):
         key_source_hidden = self.datastore_source_key[key_indices]
         key_target_hidden = self.datastore_target_key[key_indices]
         key_token = self.datastore_token_map[key_indices]
-        nearest_distance = self.ground_source_retrieve_dist[example_index, 1]
 
         instance = {
             'index': example_index,
@@ -268,7 +266,6 @@ class RevisedkeyDataset(Dataset):
             'key_token': key_token,
             'key_source_hidden': key_source_hidden,
             'key_target_hidden': key_target_hidden,
-            'nearest_distance': nearest_distance,
         }
         return instance
 
@@ -281,7 +278,6 @@ class RevisedkeyDataset(Dataset):
         key_token = torch.stack([instance['key_token'] for instance in batch], dim=0)
         key_source_hidden = torch.stack([instance['key_source_hidden'] for instance in batch], dim=0)
         key_target_hidden = torch.stack([instance['key_target_hidden'] for instance in batch], dim=0)
-        nearest_distance = torch.stack([instance['nearest_distance'] for instance in batch], dim=0)
 
         if self.args.use_cuda:
             query_hidden = query_hidden.to('cuda')
@@ -289,7 +285,6 @@ class RevisedkeyDataset(Dataset):
             key_token = key_token.to('cuda')
             key_source_hidden = key_source_hidden.to('cuda')
             key_target_hidden = key_target_hidden.to('cuda')
-            nearest_distance = nearest_distance.to('cuda')
             
         batch = Batch()
         batch.index = index
@@ -300,7 +295,6 @@ class RevisedkeyDataset(Dataset):
         batch.key_token = key_token
         batch.key_source_hidden = key_source_hidden
         batch.key_target_hidden = key_target_hidden
-        batch.nearest_distance = nearest_distance
 
         return batch
 
@@ -308,45 +302,7 @@ class RevisedkeyDataset(Dataset):
     def __len__(self):
         return len(self.examples)
 
-
-    def compute_distance(self):
-        if os.path.exists(self.source_dstore_mmap + '/ground_retrieve_dist.pt') \
-           and os.path.exists(self.target_dstore_mmap + '/ground_retrieve_dist.pt'):
-            ground_source_retrieve_dist = torch.load(self.source_dstore_mmap + '/ground_retrieve_dist.pt')
-            ground_target_retrieve_dist = torch.load(self.target_dstore_mmap + '/ground_retrieve_dist.pt')
-            
-        else:
-            criterion = nn.MSELoss(reduction='none')
-            source_retrieve_dist = []
-            for query, key_index in zip(
-                self.source_keys.split(self.args.max_tokens, 0),
-                self.source_retrieve_vals.split(self.args.max_tokens, 0)):
-
-                keys = self.datastore_source_key[key_index]
-                query = query.unsqueeze(1).expand_as(keys)
-                distance = criterion(query, keys).sum(dim=-1)
-                source_retrieve_dist.append(distance)
-            
-            target_retrieve_dist = []
-            for query, key_index in zip(
-                self.target_keys.split(self.args.max_tokens, 0),
-                self.target_retrieve_vals.split(self.args.max_tokens, 0)):
-
-                keys = self.datastore_target_key[key_index]
-                query = query.unsqueeze(1).expand_as(keys)
-                distance = criterion(query, keys).sum(dim=-1)
-                target_retrieve_dist.append(distance)
-            
-            ground_source_retrieve_dist = torch.cat(source_retrieve_dist, dim=0)
-            ground_target_retrieve_dist = torch.cat(target_retrieve_dist, dim=0)
-
-            torch.save(ground_source_retrieve_dist, self.source_dstore_mmap + '/ground_retrieve_dist.pt')
-            torch.save(ground_target_retrieve_dist, self.target_dstore_mmap + '/ground_retrieve_dist.pt')
-
-        self.ground_source_retrieve_dist = ground_source_retrieve_dist
-        self.ground_target_retrieve_dist = ground_target_retrieve_dist
-
-
+    
     def compute_retrieve_deno(self):
         # remove top1 for train
         start, end = 0, self.args.select_topk
