@@ -1,8 +1,8 @@
 dataset=$1
-ratio=$2
-threshold=$3
 
 num=4
+ratio=0.7
+threshold=2.0
 ffn_size=8192
 PROJECT_PATH=../
 
