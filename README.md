@@ -59,7 +59,7 @@ bash save_valid_retrieve_result.sh base koran
 bash finetune.sh koran
 
 # step 3. prepare heldout data from fine-tuned model
-bash knnmt_inference.sh finetune koran
+bash build_datastore.sh finetune koran
 bash save_retrieve_result.sh finetune koran
 bash save_valid_kv.sh finetune koran
 bash save_valid_retrieve_result.sh finetune koran
