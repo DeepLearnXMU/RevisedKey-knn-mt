@@ -97,8 +97,7 @@ class Trainer:
         target_key_hidden, increase_hidden = self.model.key_forward(
             source_hidden=batch.key_source_hidden,
             target_hidden=batch.key_target_hidden,
-            token=batch.key_token,
-            nearest_distance=batch.nearest_distance)
+            token=batch.key_token)
 
         mse_loss = self.criterion(query_hidden_mse_expand, target_key_hidden).sum(dim=-1)
         mse_loss = mse_loss - batch.deno_detail
@@ -151,18 +150,15 @@ class Trainer:
             source_keys = train_dataloader.dataset.source_keys
             target_keys = train_dataloader.dataset.target_keys
             token = train_dataloader.dataset.token_map
-            nearest_distances = train_dataloader.dataset.ground_source_retrieve_dist[:, 1]
             for idx, (part_source_keys, part_target_keys, part_token, distance) in enumerate(zip(
                 source_keys.split(self.args.dstore_max_tokens, 0),
                 target_keys.split(self.args.dstore_max_tokens, 0),
-                token.split(self.args.dstore_max_tokens, 0),
-                nearest_distances.split(self.args.dstore_max_tokens, 0))):
+                token.split(self.args.dstore_max_tokens, 0))):
                 
                 revised_keys, _ = self.model.key_forward(
                     source_hidden=part_source_keys.cuda(), 
                     target_hidden=part_target_keys.cuda(), 
-                    token=part_token.cuda(),
-                    nearest_distance=distance.cuda())
+                    token=part_token.cuda())
                 
                 start = idx * self.args.dstore_max_tokens
                 dstore_keys[start: start + self.args.dstore_max_tokens] = revised_keys.cpu().numpy().astype(np.float16)
