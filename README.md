@@ -71,9 +71,10 @@ bash save_valid_retrieve_result.sh finetune koran
 bash train_reviser.sh koran
 ```
 
-Or you can download checkpoints of fine-tuned models from [this site](https://drive.google.com/file/d/1vaftBeajBj3VWIYAdqLqWqR5GCiYk1VN/view?usp=sharing), and download trained revisers and faiss index from [this site](https://drive.google.com/file/d/1XAPJTANXXNjNZGjy1DVLjc5_Y8R_GF2Z/view?usp=sharing).
-
-And then, you can refer [datastore-revise.ipynb](https://github.com/DeepLearnXMU/RevisedKey-knn-mt/blob/main/datastore-revise.ipynb) to convert the original datastore to the revised datastore.
+Or you can obtain the revised datastores following steps:
+1. Download checkpoints of fine-tuned models from [this site](https://drive.google.com/file/d/1vaftBeajBj3VWIYAdqLqWqR5GCiYk1VN/view?usp=sharing)
+2. Download trained revisers and faiss index from [this site](https://drive.google.com/file/d/1XAPJTANXXNjNZGjy1DVLjc5_Y8R_GF2Z/view?usp=sharing)
+3. Refer [datastore-revise.ipynb](https://github.com/DeepLearnXMU/RevisedKey-knn-mt/blob/main/datastore-revise.ipynb) to revise the original datastore
 
 
 ### Evaluating with Our Method
