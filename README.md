@@ -13,6 +13,7 @@ The source code is developed upon kNN-MT. You can see detail in https://github.c
 * 1.19.0 <= numpy < 1.20.0
 
 You can install this project by
+
 ```
 pip install --editable ./
 ```
@@ -79,7 +80,16 @@ Or you can obtain the revised datastores following steps:
 
 ### Evaluating with Our Method
 
+To evaluate revised datastores in batches:
+
 ```
 cd revisedkey-scripts
 bash batch_knnmt_inference.sh koran ../save/news_to_koran
+```
+
+To evaluate single revised datastore:
+
+```
+cd revisedkey-scripts
+bash our_inference.sh koran <datastore_path>
 ```
