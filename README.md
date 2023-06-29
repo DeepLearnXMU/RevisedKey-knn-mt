@@ -48,6 +48,9 @@ bash knnmt_inference.sh base koran
 ```
 
 ### Train Our Model
+
+To train the revised:
+
 ```
 cd revisedkey-scripts
 # step 1. prepare heldout data from base model
@@ -67,6 +70,9 @@ bash save_valid_retrieve_result.sh finetune koran
 # step 4. train reviser
 bash train_reviser.sh koran
 ```
+
+Or you can download checkpoints of fine-tuned model from [this site](https://drive.google.com/file/d/1vaftBeajBj3VWIYAdqLqWqR5GCiYk1VN/view?usp=sharing), and download trained revisers and corresponding faiss index from [this site](https://drive.google.com/file/d/1XAPJTANXXNjNZGjy1DVLjc5_Y8R_GF2Z/view?usp=sharing).
+
 
 ### Evaluating with Our Method
 
