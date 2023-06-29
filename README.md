@@ -25,9 +25,9 @@ We use an example to show how to use our codes.
 ### Pre-trained Model and Data
 
 The pre-trained translation model can be downloaded from [this site](https://github.com/pytorch/fairseq/blob/master/examples/wmt19/README.md).
-We use the De->En Single Model for all experiments.
+We use the De->En Single Model for all experiments. And the pre-processed data can be downloaded from [this site](https://drive.google.com/file/d/18TXCWzoKuxWKHAaCRgddd6Ub64klrVhV/view?usp=sharing).
 
-For convenience, the pre-processed data can be downloaded from [this site](https://drive.google.com/file/d/18TXCWzoKuxWKHAaCRgddd6Ub64klrVhV/view?usp=sharing).
+Tips: for convenience, please place the pre-trained model at `models/wmt19.de-en/` and place the pre-processed data at `datasets/`
 
 ### Build Datastore
 
