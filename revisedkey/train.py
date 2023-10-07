@@ -150,7 +150,7 @@ class Trainer:
             source_keys = train_dataloader.dataset.source_keys
             target_keys = train_dataloader.dataset.target_keys
             token = train_dataloader.dataset.token_map
-            for idx, (part_source_keys, part_target_keys, part_token, distance) in enumerate(zip(
+            for idx, (part_source_keys, part_target_keys, part_token) in enumerate(zip(
                 source_keys.split(self.args.dstore_max_tokens, 0),
                 target_keys.split(self.args.dstore_max_tokens, 0),
                 token.split(self.args.dstore_max_tokens, 0))):
